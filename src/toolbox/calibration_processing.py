@@ -45,7 +45,7 @@ def shift_spectra(spectra1, spectra2, N_pad):
 
     spectra2 = spectra2[0,0,:]
 
-    L = Arguments.dimension[2]
+    L = spectra1.shape[-1]
     x = np.arange(L)
     j = complex(0,1)
 
@@ -147,7 +147,7 @@ def compute_dispersion(spectra1, spectra2, shift_1, shift_2):
     spectra1 = spectra1[0,0,:]
     spectra2 = spectra2[0,0,:]
     j = complex(0,1)
-    length = Arguments.dimension[2]
+    length = spectra1.shape[-1]
     x = np.arange( length )
 
     p1 = unwrap_phase(spectra1) + np.arange(length)*shift_1
@@ -244,7 +244,7 @@ def linearize_spectra(spectra: np.ndarray, x_klinear):
         :rtype: list
 
     """
-    x = np.arange( Arguments.dimension[2] )
+    x = np.arange( spectra.shape[-1] )
 
     interpolation = interp1d(x,
                              spectra,
