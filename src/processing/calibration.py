@@ -31,7 +31,7 @@ import src.toolbox.directories as directories
 
 Mirror1 = Spectra(data_dir      = Arguments.input_dir + "mirror1.npy",
                   background_dir= Arguments.input_dir + "dark_not.npy",
-                  sample_dir    = Arguments.input_dir + "dark_sample1.npy",
+                  sample_dir    = Arguments.input_dir + "dark_sample.npy",
                   ref_dir       = Arguments.input_dir + "dark_ref.npy")
 
 Mirror1.load_data()
@@ -43,7 +43,7 @@ if Arguments.silent is False:
 
 Mirror2 = Spectra(data_dir       = Arguments.input_dir + "mirror2.npy",
                   background_dir = Arguments.input_dir + "dark_not.npy",
-                  sample_dir     = Arguments.input_dir + "dark_sample2.npy",
+                  sample_dir     = Arguments.input_dir + "dark_sample.npy",
                   ref_dir        = Arguments.input_dir + "dark_ref.npy")
 
 Mirror2.load_data()
