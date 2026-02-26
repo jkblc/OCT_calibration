@@ -3,7 +3,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib
-matplotlib.use('tkagg')
+matplotlib.use('qt4agg')
 from matplotlib.widgets import Slider, Button, RadioButtons, TextBox
 import matplotlib.gridspec as gridspec
 
@@ -221,17 +221,11 @@ def plots_signals(data, sub_data, ref, sample, dark):
 
     fig = plt.figure()
     ax0 = fig.add_subplot(111)
-
-    if data is not None:
-        ax0.plot(np.squeeze(data), label='raw data')
-    if sub_data is not None:
-        ax0.plot(np.squeeze(sub_data), 'k', label='substracted raw data')
-    if ref is not None and np.any(ref):
-        ax0.plot(np.squeeze(ref), 'r', label='reference noise')
-    if sample is not None and np.any(sample):
-        ax0.plot(np.squeeze(sample), 'b', label='sample noise')
-    if dark is not None and np.any(dark):
-        ax0.plot(np.squeeze(dark), 'g', label='background noise')
+    ax0.plot(data, label='raw data')
+    ax0.plot(sub_data, 'k', label='substracted raw data')
+    ax0.plot(ref, 'r', label='reference noise')
+    ax0.plot(sample, 'b', label='sample noise')
+    ax0.plot(dark, 'g', label='background noise')
 
     plt.grid()
     plt.legend()
