@@ -1,3 +1,5 @@
+
+'''_____Standard imports_____'''
 import numpy as np
 import json
 import os
@@ -12,8 +14,12 @@ p = os.path.abspath('.')
 if p not in sys.path:
     sys.path.append(p)
 
+
+
 '''_____Project imports_____'''
-# Removed command line parsing imports
+from src.toolbox.parsing import Calibration_parse_arguments
+Calibration_parse_arguments()
+from src.toolbox._arguments import Arguments
 from src.toolbox.PySpectra import Spectra
 from src.toolbox.calibration_processing import compute_dispersion, k_linearization, shift_spectra, compensate_dispersion, compute_PSF, shift_1_spectra
 from src.toolbox.loadings import load_data
@@ -21,27 +27,23 @@ from src.toolbox.plottings import dB_plot
 from src.toolbox.maths import spectra2aline, apodization
 import src.toolbox.directories as directories
 
-'''_____Configuration Parameters_____'''
-class Arguments:
-    input_dir = "./"             # Directory containing the .npy files. Must end with '/'
-    output_file = "calib.pkl"    # Path to save the output pickle file
-    silent = False               # Set to True to disable matplotlib plotting
-    dispersion = 1.0             # Multiplier for dispersion compensation (typically 1.0)
+
 
 Mirror1 = Spectra(data_dir      = Arguments.input_dir + "mirror1.npy",
                   background_dir= Arguments.input_dir + "dark_not.npy",
-                  sample_dir    = Arguments.input_dir + "dark_sample1.npy",
+                  sample_dir    = Arguments.input_dir + "dark_sample.npy",
                   ref_dir       = Arguments.input_dir + "dark_ref.npy")
 
 Mirror1.load_data()
 Mirror1.process_data()
 
 if Arguments.silent is False:
+
     Mirror1.plot()
 
 Mirror2 = Spectra(data_dir       = Arguments.input_dir + "mirror2.npy",
                   background_dir = Arguments.input_dir + "dark_not.npy",
-                  sample_dir     = Arguments.input_dir + "dark_sample2.npy",
+                  sample_dir     = Arguments.input_dir + "dark_sample.npy",
                   ref_dir        = Arguments.input_dir + "dark_ref.npy")
 
 Mirror2.load_data()
@@ -49,6 +51,7 @@ Mirror2.process_data()
 
 
 if Arguments.silent is False:
+
     Mirror2.plot()
 
 
@@ -66,12 +69,12 @@ if Arguments.silent is False:
             )
 
 
-sys.stdout.write('Procesing spectral shift\n')
+sys.stdout.write('Procesing spectral shift')
 z_space, shifted_spectra_1, shifted_spectra_2, shift_1, shift_2 = shift_spectra(interpolated_spectra_1,
                                                                                 interpolated_spectra_2,
                                                                                 N_pad=100)
 
-sys.stdout.write('Computing dispersion ...\n')
+sys.stdout.write('Computing dispersion ...')
 
 Pdispersion = compute_dispersion(interpolated_spectra_1,
                                  interpolated_spectra_2,
@@ -80,14 +83,15 @@ Pdispersion = compute_dispersion(interpolated_spectra_1,
 
 
 compensated_spectra_1 = compensate_dispersion(interpolated_spectra_1,
-                                              Arguments.dispersion * Pdispersion)
+                                             Arguments.dispersion * Pdispersion)
 
 
 compensated_spectra_2 = compensate_dispersion(interpolated_spectra_2,
-                                              -Arguments.dispersion * Pdispersion)
+                                             -Arguments.dispersion * Pdispersion)
 
 
 if Arguments.silent is False:
+
     dB_plot(data1=spectra2aline(compensated_spectra_1),
             data2=spectra2aline(Mirror1.sub_raw)[0][0])
 
@@ -99,14 +103,25 @@ calib_dict = {"klinear":     list(x_new),
               "dispersion":  list(Pdispersion),
               "dark_not":    list(load_data(Arguments.input_dir + "dark_not.npy")),
               "dark_ref":    list(load_data(Arguments.input_dir + "dark_ref.npy")),
-              "dark_sample": list(load_data(Arguments.input_dir + "dark_sample.npy")),
+              "dark_sample": list(load_data(Arguments.input_dir + "dark_sample1.npy")),
               "peak_shift1": shift_1,
               "peak_shift2": shift_2
               }
-
 if Arguments.output_file:
-    sys.stdout.write('Writting json file to {0}...\n'.format(Arguments.output_file))
+    sys.stdout.write('Writting json file to {0}...'.format(Arguments.output_file))
     with open(Arguments.output_file, 'wb') as outfile:
         pickle.dump(calib_dict, outfile, protocol=pickle.HIGHEST_PROTOCOL)
 else:
-    sys.stdout.write('Calibration file not saved... no output file declared\n')
+    sys.stdout.write('Calibration file not saved... no output file declared')
+
+
+
+
+
+
+
+
+
+
+
+#---

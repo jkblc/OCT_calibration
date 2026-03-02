@@ -49,7 +49,7 @@ class RawConverter:
         # Check your specific acquisition parameters. Based on your file size,
         # it is 1000 ascans and 1664 samples.
         actual_ascans = 1000
-        actual_samples = 1664
+        actual_samples = 2816
         expected_elements = actual_ascans * actual_samples
 
         if raw_data.size != expected_elements:
